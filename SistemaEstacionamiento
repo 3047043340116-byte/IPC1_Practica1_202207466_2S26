@@ -1,0 +1,37 @@
+package com.mycompany.sistemaestacinamiento;
+import java.util.Random;
+import java.util.Scanner;
+public class SistemaEstacionamiento{
+
+//Scanner leer datos
+static Scanner entrada = new Scanner(Systen.in);
+
+//random para salir y entrar
+static Random random = new Random();
+
+//estacionamiento completo
+static Random = new char[10][10]
+
+//estacionamiento interno
+estatic String [][] placas = new String [8][8]
+
+//posicion entrada
+static int fila entrada;
+static int columnaEntrada;
+
+//posicion salida
+static int flaSalida;
+static int columnaSalida;
+
+//ingresos
+static int vehiculosCobrados=0;
+static double totalIngresos=0.0;
+
+//tarifa fija
+static final double TARIFA = 10.0;
+
+public static void main(String[] args){
+Tablero();
+entradaysalida();
+menuPrincipal();
+}}
