@@ -35,3 +35,40 @@ Tablero();
 entradaysalida();
 menuPrincipal();
 }}
+
+//generar salida
+
+public static void generarEntradaSalida(){
+do{
+int lado = random.nextInt(4);
+switch (lado) {
+case 0:
+filaEntrada = 0;
+columnaEntrada = random.nextInt(8) + 1;
+break;
+
+case1:
+filaEntrada = 9;
+columnaEntrada = random.nextInt(8) + 1;
+break;
+
+case2:
+filaEntrada = random.nextInt(8) + 1;
+columnaEntrada = 0;
+break;
+
+case3:
+filaEntrada = random.nextInt(8) + 1;
+columnaEntrada = 0;
+break;
+}
+
+
+
+
+
+
+
+
+}
+}
