@@ -229,3 +229,327 @@ System.out.println("Espacio ocupado.");
 return;
 }
 
+double pago;
+
+    do {
+
+        System.out.print("Monto entregado: Q");
+        pago = entrada.nextDouble();
+
+        if (pago < 0) {
+            System.out.println("No se aceptan montos negativos.");
+        } else if (pago < TARIFA) {
+            System.out.println("Pago insuficiente.");
+        }
+
+    } while (pago < TARIFA);
+
+    double cambio = pago - TARIFA;
+
+    placas[fila - 1][columna - 1] = placa;
+    tablero[fila][columna] = 'A';
+
+    vehiculosCobrados++;
+    totalIngresos += TARIFA;
+
+    System.out.println("Cambio: Q" + cambio);
+    System.out.println("Vehículo registrado correctamente.");
+
+}
+
+//=====================================
+// VALIDAR PLACA
+//=====================================
+
+public static boolean placaValida(String placa) {
+
+    if (placa.length() != 7)
+        return false;
+
+    if (placa.charAt(0) != 'P')
+        return false;
+
+    for (int i = 1; i <= 3; i++) {
+
+        if (!Character.isDigit(placa.charAt(i)))
+            return false;
+
+    }
+
+    for (int i = 4; i <= 6; i++) {
+
+        if (!Character.isUpperCase(placa.charAt(i)))
+            return false;
+
+    }
+
+    return true;
+
+}
+
+//=====================================
+// BUSCAR SI EXISTE LA PLACA
+//=====================================
+
+public static boolean placaExiste(String placa) {
+
+    for (int i = 0; i < 8; i++) {
+
+        for (int j = 0; j < 8; j++) {
+
+            if (placas[i][j].equals(placa))
+                return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+//=====================================
+// ESTACIONAMIENTO LLENO
+//=====================================
+
+public static boolean estacionamientoLleno() {
+
+    for (int i = 0; i < 8; i++) {
+
+        for (int j = 0; j < 8; j++) {
+
+            if (placas[i][j].equals(""))
+                return false;
+
+        }
+
+    }
+
+    return true;
+
+}
+
+//=====================================
+// MOSTRAR ESTACIONAMIENTO
+//=====================================
+
+public static void mostrarEstacionamiento() {
+
+    int libres = 0;
+    int ocupados = 0;
+
+    System.out.println();
+    System.out.println("        1 2 3 4 5 6 7 8");
+
+    for (int i = 0; i < 10; i++) {
+
+        if (i == 0 || i == 9)
+            System.out.print("   ");
+        else
+            System.out.print((i) + "  ");
+
+        for (int j = 0; j < 10; j++) {
+
+            if (i == 0 || i == 9 || j == 0 || j == 9) {
+
+                System.out.print(tablero[i][j] + " ");
+
+            } else {
+
+                if (placas[i - 1][j - 1].equals("")) {
+
+                    System.out.print("L ");
+                    libres++;
+
+                } else {
+
+                    System.out.print("A ");
+                    ocupados++;
+
+                }
+
+            }
+
+        }
+
+        System.out.println();
+
+    }
+
+    System.out.println();
+    System.out.println("Espacios libres: " + libres);
+    System.out.println("Espacios ocupados: " + ocupados);
+
+}
+
+//=====================================
+// BUSCAR VEHÍCULO
+//=====================================
+
+public static void buscarVehiculo() {
+
+    entrada.nextLine();
+
+    System.out.print("Ingrese la placa: ");
+    String placa = entrada.nextLine();
+
+    if (!placaValida(placa)) {
+        System.out.println("La placa no tiene un formato válido.");
+        return;
+    }
+
+    int[] posicion = obtenerPosicionPlaca(placa);
+
+    if (posicion[0] == -1) {
+
+        System.out.println("Vehículo no encontrado.");
+
+    } else {
+
+        System.out.println("Vehículo encontrado.");
+        System.out.println("Fila: " + (posicion[0] + 1));
+        System.out.println("Columna: " + (posicion[1] + 1));
+
+    }
+
+}
+
+//=====================================
+// OBTENER POSICIÓN DE UNA PLACA
+//=====================================
+
+public static int[] obtenerPosicionPlaca(String placa) {
+
+    int[] posicion = {-1, -1};
+
+    for (int i = 0; i < 8; i++) {
+
+        for (int j = 0; j < 8; j++) {
+
+            if (placas[i][j].equals(placa)) {
+
+                posicion[0] = i;
+                posicion[1] = j;
+                return posicion;
+
+            }
+
+        }
+
+    }
+
+    return posicion;
+
+}
+
+//=====================================
+// RETIRAR VEHÍCULO
+//=====================================
+
+public static void retirarVehiculo() {
+
+    entrada.nextLine();
+
+    System.out.print("Ingrese la placa del vehículo: ");
+    String placa = entrada.nextLine();
+
+    if (!placaValida(placa)) {
+        System.out.println("Formato de placa inválido.");
+        return;
+    }
+
+    int[] posicion = obtenerPosicionPlaca(placa);
+
+    if (posicion[0] == -1) {
+
+        System.out.println("El vehículo no se encuentra en el estacionamiento.");
+        return;
+
+    }
+
+    placas[posicion[0]][posicion[1]] = "";
+    tablero[posicion[0] + 1][posicion[1] + 1] = 'L';
+
+ System.out.println("Vehículo retirado correctamente.");
+ System.out.println("Fila: " + (posicion[0] + 1));
+ System.out.println("Columna: " + (posicion[1] + 1));
+
+}
+
+//=====================================
+// MOSTRAR INGRESOS
+//=====================================
+
+public static void mostrarIngresos() {
+
+System.out.println();
+System.out.println("===== INGRESOS =====");
+System.out.println("Vehículos cobrados: " + vehiculosCobrados);
+System.out.println("Tarifa por vehículo: Q" + TARIFA);
+System.out.println("Total recaudado: Q" + totalIngresos);
+
+}
+
+//=====================================
+// MOSTRAR RUTA MÁS CORTA
+//=====================================
+
+public static void mostrarRuta() {
+
+    int entrada = obtenerPosicionPerimetro(filaEntrada, columnaEntrada);
+    int salida = obtenerPosicionPerimetro(filaSalida, columnaSalida);
+
+    int horario;
+    int antihorario;
+
+    if (entrada <= salida) {
+        horario = salida - entrada;
+    } else {
+        horario = 36 - entrada + salida;
+    }
+
+    antihorario = 36 - horario;
+
+    System.out.println("\n===== RUTA MÁS CORTA =====");
+    System.out.println("Distancia sentido horario: " + horario + " posiciones");
+    System.out.println("Distancia sentido antihorario: " + antihorario + " posiciones");
+
+    if (horario < antihorario) {
+
+    System.out.println("Ruta recomendada: Sentido horario.");
+
+    } else if (antihorario < horario) {
+
+    System.out.println("Ruta recomendada: Sentido antihorario.");
+
+    } else {
+
+    System.out.println("Ambas rutas tienen la misma distancia.");
+
+    }
+
+}
+
+//=====================================
+// CONVERTIR POSICIÓN DEL BORDE A ÍNDICE
+//=====================================
+
+public static int obtenerPosicionPerimetro(int fila, int columna) {
+
+    // Parte superior
+    if (fila == 0)
+        return columna - 1;
+
+    // Lado derecho
+    if (columna == 9)
+        return 8 + fila;
+
+    // Parte inferior
+    if (fila == 9)
+        return 17 + (8 - columna);
+
+    // Lado izquierdo
+    return 26 + (8 - fila);
+
+}
+}
