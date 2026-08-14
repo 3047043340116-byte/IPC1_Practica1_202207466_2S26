@@ -1,467 +1,543 @@
 package sistemaestacionamiento;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class SistemaEstacionamiento {
 
-    // Constantes
-    static final int FILAS = 8;
-    static final int COLUMNAS = 8;
-    static final double TARIFA = 10.00;
-
-    // Variables globales
+    // Scanner para leer datos
     static Scanner entrada = new Scanner(System.in);
 
-    static String[][] placas = new String[FILAS][COLUMNAS];
+    // Random para generar entrada y salida
+    static Random random = new Random();
 
-    static int vehiculosCobrados = 0;
-    static double totalIngresos = 0.0;
+    // Tablero completo de 10x10
+    static char[][] tablero = new char[10][10];
 
-    // Posición de entrada y salida
+    // Estacionamiento interno de 8x8
+    static String[][] placas = new String[8][8];
+
+    // Posición de entrada
     static int filaEntrada;
     static int columnaEntrada;
+
+    // Posición de salida
     static int filaSalida;
     static int columnaSalida;
 
-    // =========================
-    // MÉTODO MAIN
-    // =========================
+    // Ingresos
+    static int vehiculosCobrados = 0;
+    static double totalIngresos = 0.0;
+
+    // Tarifa fija
+    static final double TARIFA = 10.0;
+
     public static void main(String[] args) {
 
-        inicializarEstacionamiento();
+        inicializarTablero();
 
         generarEntradaSalida();
 
         menuPrincipal();
-
-        entrada.close();
     }
 
-    // =========================
-    // INICIALIZAR ESTACIONAMIENTO
-    // =========================
-    public static void inicializarEstacionamiento() {
+    // ==========================
+    // Inicializar tablero
+    // ==========================
+    public static void inicializarTablero() {
 
-        for (int i = 0; i < FILAS; i++) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
 
-            for (int j = 0; j < COLUMNAS; j++) {
+                if (i == 0 || i == 9 || j == 0 || j == 9) {
+                    tablero[i][j] = '=';
+                } else {
+                    tablero[i][j] = 'L';
+                    placas[i - 1][j - 1] = "";
+                }
 
-                placas[i][j] = null;
             }
         }
+
     }
 
-    // =========================
-    // GENERAR ENTRADA Y SALIDA
-    // =========================
+    // ==========================
+    // Generar entrada y salida
+    // ==========================
     public static void generarEntradaSalida() {
 
-        // Para este ejemplo se colocan posiciones fijas
-        filaEntrada = 0;
-        columnaEntrada = 1;
+        do {
 
-        filaSalida = 0;
-        columnaSalida = 6;
+            int lado = random.nextInt(4);
+
+            switch (lado) {
+
+                case 0:
+                    filaEntrada = 0;
+                    columnaEntrada = random.nextInt(8) + 1;
+                    break;
+
+                case 1:
+                    filaEntrada = 9;
+                    columnaEntrada = random.nextInt(8) + 1;
+                    break;
+
+                case 2:
+                    filaEntrada = random.nextInt(8) + 1;
+                    columnaEntrada = 0;
+                    break;
+
+                case 3:
+                    filaEntrada = random.nextInt(8) + 1;
+                    columnaEntrada = 9;
+                    break;
+
+            }
+
+            lado = random.nextInt(4);
+
+            switch (lado) {
+
+                case 0:
+                    filaSalida = 0;
+                    columnaSalida = random.nextInt(8) + 1;
+                    break;
+
+                case 1:
+                    filaSalida = 9;
+                    columnaSalida = random.nextInt(8) + 1;
+                    break;
+
+                case 2:
+                    filaSalida = random.nextInt(8) + 1;
+                    columnaSalida = 0;
+                    break;
+
+                case 3:
+                    filaSalida = random.nextInt(8) + 1;
+                    columnaSalida = 9;
+                    break;
+
+            }
+
+        } while (filaEntrada == filaSalida && columnaEntrada == columnaSalida);
+
+        tablero[filaEntrada][columnaEntrada] = 'E';
+        tablero[filaSalida][columnaSalida] = 'S';
+
     }
 
-    // =========================
-    // MENÚ PRINCIPAL
-    // =========================
+    // ==========================
+    // Menú principal
+    // ==========================
     public static void menuPrincipal() {
 
         int opcion;
 
         do {
 
-            System.out.println();
-            System.out.println("==========================================");
-            System.out.println("     SISTEMA DE ESTACIONAMIENTO");
-            System.out.println("==========================================");
-            System.out.println("1. Ingresar vehiculo");
-            System.out.println("2. Retirar vehiculo");
+            System.out.println("\n===== SISTEMA DE ESTACIONAMIENTO =====");
+            System.out.println("1. Ingresar vehículo");
+            System.out.println("2. Retirar vehículo");
             System.out.println("3. Mostrar estacionamiento");
-            System.out.println("4. Buscar vehiculo por placa");
-            System.out.println("5. Mostrar ruta mas corta");
+            System.out.println("4. Buscar vehículo por placa");
+            System.out.println("5. Mostrar ruta más corta entre entrada y salida");
             System.out.println("6. Mostrar ingresos");
             System.out.println("7. Salir");
-            System.out.println("==========================================");
-            System.out.print("Seleccione una opcion: ");
+            System.out.print("Seleccione una opción: ");
 
             opcion = entrada.nextInt();
-            entrada.nextLine();
-
-            System.out.println();
 
             switch (opcion) {
 
                 case 1:
-                    ingresarVehiculo();
-                    break;
-
+    ingresarVehiculo();
+    break;
                 case 2:
-                    retirarVehiculo();
-                    break;
-
+    retirarVehiculo();
+    break;
                 case 3:
-                    mostrarEstacionamiento();
-                    break;
-
+    mostrarEstacionamiento();
+    break;
                 case 4:
-                    buscarVehiculo();
-                    break;
-
+    buscarVehiculo();
+    break;
                 case 5:
-                    mostrarRutaMasCorta();
-                    break;
-
+    mostrarRuta();
+    break;
                 case 6:
-                    mostrarIngresos();
-                    break;
-
+    mostrarIngresos();
+    break;
                 case 7:
                     System.out.println("Gracias por utilizar el sistema.");
                     break;
 
                 default:
-                    System.out.println("Opcion invalida. Intente nuevamente.");
-                    break;
+                    System.out.println("Opción inválida.");
+
             }
 
         } while (opcion != 7);
+
+    }
+    //=====================================
+// INGRESAR VEHICULO
+//=====================================
+public static void ingresarVehiculo() {
+
+    if (estacionamientoLleno()) {
+        System.out.println("\nEl estacionamiento está lleno.");
+        return;
     }
 
-    // =========================
-    // INGRESAR VEHÍCULO
-    // =========================
-    public static void ingresarVehiculo() {
+    entrada.nextLine();
 
-        System.out.println("===== INGRESAR VEHICULO =====");
+    String placa;
 
+    do {
         System.out.print("Ingrese la placa: ");
-        String placa = entrada.nextLine().toUpperCase();
+        placa = entrada.nextLine();
 
-        // Validar placa
         if (!placaValida(placa)) {
-
-            System.out.println("Placa invalida.");
-            System.out.println("Formato correcto: P###LLL");
-            return;
+            System.out.println("Placa inválida.");
         }
 
-        // Verificar si la placa ya existe
-        if (placaExiste(placa)) {
+    } while (!placaValida(placa));
 
-            System.out.println("La placa ya esta registrada.");
-            return;
-        }
-
-        // Pedir fila
-        System.out.print("Ingrese la fila (1-8): ");
-        int fila = entrada.nextInt();
-
-        // Pedir columna
-        System.out.print("Ingrese la columna (1-8): ");
-        int columna = entrada.nextInt();
-
-        entrada.nextLine();
-
-        // Validar posición
-        if (fila < 1 || fila > FILAS ||
-                columna < 1 || columna > COLUMNAS) {
-
-            System.out.println("Posicion invalida.");
-            return;
-        }
-
-        // Convertir a índices del arreglo
-        int f = fila - 1;
-        int c = columna - 1;
-
-        // Verificar si está ocupado
-        if (placas[f][c] != null) {
-
-            System.out.println("Ese espacio ya esta ocupado.");
-            return;
-        }
-
-        // Solicitar pago
-        double pago;
-
-        do {
-
-            System.out.print("Monto entregado: Q");
-            pago = entrada.nextDouble();
-            entrada.nextLine();
-
-            if (pago < 0) {
-
-                System.out.println("No se aceptan montos negativos.");
-
-            } else if (pago < TARIFA) {
-
-                System.out.println("Pago insuficiente.");
-                System.out.println("La tarifa es de Q10.00.");
-            }
-
-        } while (pago < TARIFA);
-
-        // Calcular cambio
-        double cambio = pago - TARIFA;
-
-        // Registrar vehículo
-        placas[f][c] = placa;
-
-        // Registrar ingreso
-        vehiculosCobrados++;
-        totalIngresos += TARIFA;
-
-        System.out.println();
-        System.out.println("Vehiculo registrado correctamente.");
-        System.out.println("Placa: " + placa);
-        System.out.println("Fila: " + fila);
-        System.out.println("Columna: " + columna);
-        System.out.printf("Cambio: Q%.2f%n", cambio);
+    if (placaExiste(placa)) {
+        System.out.println("La placa ya está registrada.");
+        return;
     }
 
-    // =========================
-    // VALIDAR PLACA
-    // =========================
-    public static boolean placaValida(String placa) {
+    int fila;
+    int columna;
 
-        if (placa.length() != 7) {
-            return false;
+    do {
+        System.out.print("Fila (1-8): ");
+        fila = entrada.nextInt();
+
+        System.out.print("Columna (1-8): ");
+        columna = entrada.nextInt();
+
+        if (fila < 1 || fila > 8 || columna < 1 || columna > 8) {
+            System.out.println("Posición inválida.");
         }
 
-        // Primera posición debe ser P
-        if (placa.charAt(0) != 'P') {
-            return false;
-        }
+    } while (fila < 1 || fila > 8 || columna < 1 || columna > 8);
 
-        // Posiciones 1,2,3 deben ser números
-        for (int i = 1; i <= 3; i++) {
-
-            if (!Character.isDigit(placa.charAt(i))) {
-                return false;
-            }
-        }
-
-        // Posiciones 4,5,6 deben ser letras
-        for (int i = 4; i <= 6; i++) {
-
-            if (!Character.isLetter(placa.charAt(i))) {
-                return false;
-            }
-        }
-
-        return true;
+    if (!placas[fila - 1][columna - 1].equals("")) {
+        System.out.println("Ese espacio ya está ocupado.");
+        return;
     }
 
-    // =========================
-    // VERIFICAR PLACA EXISTENTE
-    // =========================
-    public static boolean placaExiste(String placa) {
+    double pago;
 
-        for (int i = 0; i < FILAS; i++) {
+    do {
 
-            for (int j = 0; j < COLUMNAS; j++) {
+        System.out.print("Monto entregado: Q");
+        pago = entrada.nextDouble();
 
-                if (placa.equals(placas[i][j])) {
-
-                    return true;
-                }
-            }
+        if (pago < 0) {
+            System.out.println("No se aceptan montos negativos.");
+        } else if (pago < TARIFA) {
+            System.out.println("Pago insuficiente.");
         }
 
+    } while (pago < TARIFA);
+
+    double cambio = pago - TARIFA;
+
+    placas[fila - 1][columna - 1] = placa;
+    tablero[fila][columna] = 'A';
+
+    vehiculosCobrados++;
+    totalIngresos += TARIFA;
+
+    System.out.println("Cambio: Q" + cambio);
+    System.out.println("Vehículo registrado correctamente.");
+
+}
+
+//=====================================
+// VALIDAR PLACA
+//=====================================
+public static boolean placaValida(String placa) {
+
+    if (placa.length() != 7)
         return false;
+
+    if (placa.charAt(0) != 'P')
+        return false;
+
+    for (int i = 1; i <= 3; i++) {
+
+        if (!Character.isDigit(placa.charAt(i)))
+            return false;
+
     }
 
-    // =========================
-    // RETIRAR VEHÍCULO
-    // =========================
-    public static void retirarVehiculo() {
+    for (int i = 4; i <= 6; i++) {
 
-        System.out.println("===== RETIRAR VEHICULO =====");
+        if (!Character.isUpperCase(placa.charAt(i)))
+            return false;
 
-        System.out.print("Ingrese la placa del vehiculo: ");
-        String placa = entrada.nextLine().toUpperCase();
-
-        for (int i = 0; i < FILAS; i++) {
-
-            for (int j = 0; j < COLUMNAS; j++) {
-
-                if (placa.equals(placas[i][j])) {
-
-                    placas[i][j] = null;
-
-                    System.out.println();
-                    System.out.println("Vehiculo retirado correctamente.");
-                    System.out.println("Fila: " + (i + 1));
-                    System.out.println("Columna: " + (j + 1));
-
-                    return;
-                }
-            }
-        }
-
-        System.out.println("El vehiculo no se encuentra en el estacionamiento.");
     }
 
-    // =========================
-    // MOSTRAR ESTACIONAMIENTO
-    // =========================
-    public static void mostrarEstacionamiento() {
+    return true;
 
-        System.out.println("===== ESTACIONAMIENTO =====");
+}
 
-        System.out.print("     ");
+//=====================================
+// BUSCAR SI EXISTE LA PLACA
+//=====================================
+public static boolean placaExiste(String placa) {
 
-        for (int j = 1; j <= COLUMNAS; j++) {
+    for (int i = 0; i < 8; i++) {
 
-            System.out.print(j + "   ");
+        for (int j = 0; j < 8; j++) {
+
+            if (placas[i][j].equals(placa))
+                return true;
+
         }
 
-        System.out.println();
+    }
 
-        for (int i = 0; i < FILAS; i++) {
+    return false;
 
-            System.out.print((i + 1) + "   ");
+}
 
-            for (int j = 0; j < COLUMNAS; j++) {
+//=====================================
+// ESTACIONAMIENTO LLENO
+//=====================================
+public static boolean estacionamientoLleno() {
 
-                if (placas[i][j] == null) {
+    for (int i = 0; i < 8; i++) {
 
-                    System.out.print("[L] ");
+        for (int j = 0; j < 8; j++) {
+
+            if (placas[i][j].equals(""))
+                return false;
+
+        }
+
+    }
+
+    return true;
+
+}
+ //=====================================
+// MOSTRAR ESTACIONAMIENTO
+//=====================================
+public static void mostrarEstacionamiento() {
+
+    int libres = 0;
+    int ocupados = 0;
+
+    System.out.println();
+    System.out.println("        1 2 3 4 5 6 7 8");
+
+    for (int i = 0; i < 10; i++) {
+
+        if (i == 0 || i == 9)
+            System.out.print("   ");
+        else
+            System.out.print((i) + "  ");
+
+        for (int j = 0; j < 10; j++) {
+
+            if (i == 0 || i == 9 || j == 0 || j == 9) {
+
+                System.out.print(tablero[i][j] + " ");
+
+            } else {
+
+                if (placas[i - 1][j - 1].equals("")) {
+
+                    System.out.print("L ");
+                    libres++;
 
                 } else {
 
-                    System.out.print("[A] ");
+                    System.out.print("A ");
+                    ocupados++;
+
                 }
+
             }
 
-            System.out.println();
         }
-
-        int libres = contarEspaciosLibres();
-        int ocupados = FILAS * COLUMNAS - libres;
-
-        System.out.println();
-        System.out.println("Espacios libres: " + libres);
-        System.out.println("Espacios ocupados: " + ocupados);
-    }
-
-    // =========================
-    // CONTAR ESPACIOS LIBRES
-    // =========================
-    public static int contarEspaciosLibres() {
-
-        int libres = 0;
-
-        for (int i = 0; i < FILAS; i++) {
-
-            for (int j = 0; j < COLUMNAS; j++) {
-
-                if (placas[i][j] == null) {
-
-                    libres++;
-                }
-            }
-        }
-
-        return libres;
-    }
-
-    // =========================
-    // BUSCAR VEHÍCULO
-    // =========================
-    public static void buscarVehiculo() {
-
-        System.out.println("===== BUSCAR VEHICULO =====");
-
-        System.out.print("Ingrese la placa: ");
-        String placa = entrada.nextLine().toUpperCase();
-
-        for (int i = 0; i < FILAS; i++) {
-
-            for (int j = 0; j < COLUMNAS; j++) {
-
-                if (placa.equals(placas[i][j])) {
-
-                    System.out.println();
-                    System.out.println("Vehiculo encontrado.");
-                    System.out.println("Fila: " + (i + 1));
-                    System.out.println("Columna: " + (j + 1));
-
-                    return;
-                }
-            }
-        }
-
-        System.out.println("Vehiculo no encontrado.");
-    }
-
-    // =========================
-    // RUTA MÁS CORTA
-    // =========================
-    public static void mostrarRutaMasCorta() {
-
-        System.out.println("===== RUTA MAS CORTA =====");
-
-        int distanciaHorario;
-        int distanciaAntihorario;
-
-        // Cálculo sencillo sobre el perímetro
-        distanciaHorario =
-                Math.abs(filaSalida - filaEntrada)
-                + Math.abs(columnaSalida - columnaEntrada);
-
-        distanciaAntihorario =
-                (FILAS + COLUMNAS) * 2 - distanciaHorario;
-
-        System.out.println("Entrada: fila "
-                + (filaEntrada + 1)
-                + ", columna "
-                + (columnaEntrada + 1));
-
-        System.out.println("Salida: fila "
-                + (filaSalida + 1)
-                + ", columna "
-                + (columnaSalida + 1));
 
         System.out.println();
 
-        System.out.println("Distancia sentido horario: "
-                + distanciaHorario);
+    }
 
-        System.out.println("Distancia sentido antihorario: "
-                + distanciaAntihorario);
+    System.out.println();
+    System.out.println("Espacios libres: " + libres);
+    System.out.println("Espacios ocupados: " + ocupados);
 
-        if (distanciaHorario < distanciaAntihorario) {
+}   
+ 
+//=====================================
+// BUSCAR VEHÍCULO
+//=====================================
+public static void buscarVehiculo() {
 
-            System.out.println("Ruta recomendada: sentido horario.");
+    entrada.nextLine();
 
-        } else if (distanciaAntihorario < distanciaHorario) {
+    System.out.print("Ingrese la placa: ");
+    String placa = entrada.nextLine();
 
-            System.out.println("Ruta recomendada: sentido antihorario.");
+    if (!placaValida(placa)) {
+        System.out.println("La placa no tiene un formato válido.");
+        return;
+    }
 
-        } else {
+    int[] posicion = obtenerPosicionPlaca(placa);
 
-            System.out.println("Ambas rutas tienen la misma distancia.");
+    if (posicion[0] == -1) {
+
+        System.out.println("Vehículo no encontrado.");
+
+    } else {
+
+        System.out.println("Vehículo encontrado.");
+        System.out.println("Fila: " + (posicion[0] + 1));
+        System.out.println("Columna: " + (posicion[1] + 1));
+
+    }
+
+}
+
+//=====================================
+// OBTENER POSICIÓN DE UNA PLACA
+//=====================================
+public static int[] obtenerPosicionPlaca(String placa) {
+
+    int[] posicion = {-1, -1};
+
+    for (int i = 0; i < 8; i++) {
+
+        for (int j = 0; j < 8; j++) {
+
+            if (placas[i][j].equals(placa)) {
+
+                posicion[0] = i;
+                posicion[1] = j;
+                return posicion;
+
+            }
+
         }
+
     }
 
-    // =========================
-    // MOSTRAR INGRESOS
-    // =========================
-    public static void mostrarIngresos() {
+    return posicion;
 
-        System.out.println("===== INGRESOS =====");
+}
+//=====================================
+// RETIRAR VEHÍCULO
+//=====================================
+public static void retirarVehiculo() {
 
-        System.out.println("Vehiculos cobrados: "
-                + vehiculosCobrados);
+    entrada.nextLine();
 
-        System.out.printf("Tarifa por vehiculo: Q%.2f%n", TARIFA);
+    System.out.print("Ingrese la placa del vehículo: ");
+    String placa = entrada.nextLine();
 
-        System.out.printf("Total recaudado: Q%.2f%n",
-                totalIngresos);
+    if (!placaValida(placa)) {
+        System.out.println("Formato de placa inválido.");
+        return;
     }
+
+    int[] posicion = obtenerPosicionPlaca(placa);
+
+    if (posicion[0] == -1) {
+
+        System.out.println("El vehículo no se encuentra en el estacionamiento.");
+        return;
+
+    }
+
+    placas[posicion[0]][posicion[1]] = "";
+    tablero[posicion[0] + 1][posicion[1] + 1] = 'L';
+
+    System.out.println("Vehículo retirado correctamente.");
+    System.out.println("Fila: " + (posicion[0] + 1));
+    System.out.println("Columna: " + (posicion[1] + 1));
+
+}
+//=====================================
+// MOSTRAR INGRESOS
+//=====================================
+public static void mostrarIngresos() {
+
+    System.out.println();
+    System.out.println("===== INGRESOS =====");
+    System.out.println("Vehículos cobrados: " + vehiculosCobrados);
+    System.out.println("Tarifa por vehículo: Q" + TARIFA);
+    System.out.println("Total recaudado: Q" + totalIngresos);
+
+}
+//=====================================
+// MOSTRAR RUTA MÁS CORTA
+//=====================================
+public static void mostrarRuta() {
+
+    int entrada = obtenerPosicionPerimetro(filaEntrada, columnaEntrada);
+    int salida = obtenerPosicionPerimetro(filaSalida, columnaSalida);
+
+    int horario;
+    int antihorario;
+
+    if (entrada <= salida) {
+        horario = salida - entrada;
+    } else {
+        horario = 36 - entrada + salida;
+    }
+
+    antihorario = 36 - horario;
+
+    System.out.println("\n===== RUTA MÁS CORTA =====");
+    System.out.println("Distancia sentido horario: " + horario + " posiciones");
+    System.out.println("Distancia sentido antihorario: " + antihorario + " posiciones");
+
+    if (horario < antihorario) {
+
+        System.out.println("Ruta recomendada: Sentido horario.");
+
+    } else if (antihorario < horario) {
+
+        System.out.println("Ruta recomendada: Sentido antihorario.");
+
+    } else {
+
+        System.out.println("Ambas rutas tienen la misma distancia.");
+
+    }
+
+}
+
+//=====================================
+// CONVERTIR POSICIÓN DEL BORDE A ÍNDICE
+//=====================================
+public static int obtenerPosicionPerimetro(int fila, int columna) {
+
+    // Parte superior
+    if (fila == 0)
+        return columna - 1;
+
+    // Lado derecho
+    if (columna == 9)
+        return 8 + fila;
+
+    // Parte inferior
+    if (fila == 9)
+        return 17 + (8 - columna);
+
+    // Lado izquierdo
+    return 26 + (8 - fila);
+
+}
+
 }
