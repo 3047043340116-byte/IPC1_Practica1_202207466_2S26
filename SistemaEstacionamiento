@@ -3,31 +3,55 @@ import java.util.Random;
 import java.util.Scanner;
 public class SistemaEstacionamiento{
 
-//Scanner leer datos
+// ==========================
+//SCANNER LEER DATOS
+// ==========================
+
 static Scanner entrada = new Scanner(Systen.in);
 
-//random para salir y entrar
+// ==========================
+//RANDOM PARA SALIR Y ENTRAR
+// ==========================
+
 static Random random = new Random();
 
-//estacionamiento completo
+// ==========================
+//ESTACIONAMIENTO COMPLETO
+// ==========================
+
 static Random = new char[10][10]
 
-//estacionamiento interno
+// ==========================
+//ESTACIONAMIENTO INTERNO
+// ==========================
+
 estatic String [][] placas = new String [8][8]
 
-//posicion entrada
+// ==========================
+//POSICION ENTRADA
+// ==========================
+
 static int fila entrada;
 static int columnaEntrada;
 
-//posicion salida
+// ==========================
+//POSICION SALIDA
+// ==========================
+
 static int flaSalida;
 static int columnaSalida;
 
-//ingresos
+// ==========================
+//INGRESOS
+// ==========================
+
 static int vehiculosCobrados=0;
 static double totalIngresos=0.0;
 
-//tarifa fija
+// ==========================
+//TARIFA FIJA
+// ==========================
+
 static final double TARIFA = 10.0;
 
 public static void main(String[] args){
@@ -36,7 +60,9 @@ entradaysalida();
 menuPrincipal();
 }}
 
-//generar salida
+// ==========================
+//GENERAR SALIDA
+// ==========================
 
 public static void generarEntradaSalida(){
 do{
@@ -93,4 +119,113 @@ tablero[filaEntrada] [columnaEntrada] = 'E';
 tablero [filaSalida] [columnaSalida] = 'S';
 }
 
+// ==========================
+//MENU PRINCIPAL
+// ==========================
+
+public static void menuPrincipal(){
+
+int opcion;
+do{
+
+System.out.println(\n===== SISTEMA DE ESTACIONAMIENTO =====);
+System.out.println("1.Ingresar vehiculo");
+System.out.println("2.Retirar vehiculo");
+System.out.println("3.Mostrar estacionamiento");
+System.out.println("4.Buscar vehiculo por placa");
+System.out.println("5.Mostrar ruta mas corta entre la salida y entrada");
+System.out.println("6.Mostrar ingresos");
+System.out.println("7.Salir");
+System.out.print("Selecione una opcion: ");
+
+opcion = entrada.nextInt();
+
+// ==========================
+//OPCIONES
+// ==========================
+
+switch (opcion){
+
+case 1:
+ingresarVehiculo();
+break;
+
+case 2:
+retirarVehiculo();
+break;
+
+case 3:
+mostrarEstacionamiento();
+break;
+
+case 4:
+buscarVehiculo();
+break;
+
+case 5:
+mostrarRuta();
+break;
+
+case 6:
+mostrarIngresos();
+break;
+
+case 7:
+System.out.println("Gracias por escogernos.");
+break;
+
+default:
+System.out.println("Opcion Incorrecta")
+}
+
+}
+while (opcion !=7);
+}
+
+// ==========================
+//INGRESAR VEHICULO
+// ==========================
+
+public estatic void ingresarVehiculo() {
+if (estacionamientoLleno()){
+System.out.println("\nEl estacionamiento esta lleno.");
+return;
+}
+entrada.nextLine();
+
+String placa;
+
+do{
+System.out.print("Ingrese la placa del auto: ");
+placa = entrada.nextLine();
+
+if (!placaValida(placa)){
+System.out.println("Placa ivalida");
+}
+}
+while (!placaValida(placa));
+System.out.println("La placa ya esta en el sistema.");
+return;
+}
+
+int fila;
+int columna;
+
+do{
+System.out.print("Fila(1-8): ");
+fila= entrada.nextInt();
+
+System.out.print("Columna (1-8): ");
+columna = entrada.nextInt();
+
+if (fila < 1 || fila > 8 || columna < 1 || columna > 8){
+System.out.println("Posicion invalida.");
+}
+}
+while (fila < 1 || fila > 8 || columna < 1 || columna > 8);
+
+if (!placas [fila - 1] [columna - 1].equals("")){
+System.out.println("Espacio ocupado.");
+return;
+}
 
