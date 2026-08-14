@@ -63,12 +63,34 @@ columnaEntrada = 0;
 break;
 }
 
+lado = random.nextInt (4);
+switch (lado) {
 
+case 0:
+filaSalida = 0;
+columnaSalida = random.nextInt(8) + 1;
+break;
 
+case 1:
+filaSalida = 9;
+columnaSalida = random.nextInte(8) + 1;
+break;
 
+case2:
+filaSalida = random.nexInt(8) + 1;
+columnaSalida = 0;
+break;
 
-
-
-
+case3:
+filaSalida = random.nextInt(8) + 1;
+columnaSalida = 9;
+break;
 }
+} 
+while (filaEntrada == filaSalida && columnaEntrada == columnaSalida);
+
+tablero[filaEntrada] [columnaEntrada] = 'E';
+tablero [filaSalida] [columnaSalida] = 'S';
 }
+
+
